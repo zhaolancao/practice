@@ -1,2 +1,2 @@
 # practice
-All kinds of practices non-work related.
+All kinds of practices...
