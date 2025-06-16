@@ -30,6 +30,7 @@ public class SortAndSearch {
     }
 
     private static int[] mergeSort(int[] elements, int left, int right) {
+        
         if (left >= right) {
             return elements;
         }
