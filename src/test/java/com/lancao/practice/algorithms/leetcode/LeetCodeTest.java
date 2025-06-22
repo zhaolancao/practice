@@ -23,4 +23,8 @@ class LeetCodeTest {
 //        System.out.println(LeetCode.minimumDeletions("zzfzzzzppfp", 1));
 //        System.out.println(LeetCode.minimumDeletions("dabdcbdcdcd", 2));
     }
+    @Test
+    void reverse() {
+        System.out.println(LeetCode.reverse(1534236469));
+    }
 }

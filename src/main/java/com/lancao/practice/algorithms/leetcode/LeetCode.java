@@ -40,6 +40,22 @@ public class LeetCode {
     }
 
     /**
+     * 7. 整数反转
+     */
+    public static int reverse(int x) {
+        boolean isNegative = x < 0;
+        double result = 0;
+        while (x != 0) {
+            result = result * 10 + x % 10;
+            x /= 10;
+        }
+        if (isNegative) {
+            return Integer.MIN_VALUE > result ? 0 : (int) result;
+        }
+        return Integer.MAX_VALUE < result ? 0 : (int) result;
+    }
+
+    /**
      * 8. 字符串转换整数 (atoi)
      */
     public static int myAtoi(String s) {
