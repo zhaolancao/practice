@@ -17,7 +17,7 @@ class SortAndSearchTest {
         long start = currentTimeMillis();
         Assertions.assertEquals(5, SortAndSearch.binarySearch(elements, target));
         Assertions.assertEquals(-1, SortAndSearch.binarySearch(elements, falseTarget));
-        System.out.println("solution cost: " + (currentTimeMillis() - start) + "ms");
+        System.out.println("binarySearch cost: " + (currentTimeMillis() - start) + "ms");
     }
 
     @Test
@@ -27,7 +27,7 @@ class SortAndSearchTest {
         int[] result = SortAndSearch.mergeSort(elements);
         Arrays.stream(result).forEach(ele -> System.out.print(ele + " "));
         System.out.println();
-        System.out.println("solution cost: " + (currentTimeMillis() - start) + "ms");
+        System.out.println("mergeSort cost: " + (currentTimeMillis() - start) + "ms");
     }
 
     @Test
@@ -35,5 +35,15 @@ class SortAndSearchTest {
         System.out.println((int) 'a');
         System.out.println((int) 'b');
         System.out.println((int) ('z' - 'a'));
+    }
+
+    @Test
+    void quickSort() {
+        long start = currentTimeMillis();
+        int[] elements = new int[]{9, 2, 0, 2, 5, 0, 6, 1, 3, 7};
+        int[] result = SortAndSearch.quickSort(elements);
+        Arrays.stream(result).forEach(ele -> System.out.print(ele + " "));
+        System.out.println();
+        System.out.println("quickSort cost: " + (currentTimeMillis() - start) + "ms");
     }
 }

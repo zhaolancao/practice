@@ -1,4 +1,4 @@
-package com.lancao.practice.algorithms;
+package com.lancao.practice.algorithms.leetcode;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,5 +24,20 @@ class NSumTest {
             System.out.println(" = " + target);
         });
         System.out.println("solution cost: " + (currentTimeMillis() - start) + "ms");
+    }
+
+    @Test
+    void threeSum() {
+        long start = currentTimeMillis();
+        int[] elements = new int[]{-1, 0, 1, 2, -1, -4};
+        List<List<Integer>> result = NSum.threeSum(elements);
+        Assertions.assertFalse(result.isEmpty());
+        result.forEach(seq -> {
+            for (int i = 0; i < elements.length; i++) {
+                System.out.print(elements[i] + " ");
+            }
+            System.out.println(" = " + target);
+        });
+        System.out.println("threeSum cost: " + (currentTimeMillis() - start) + "ms");
     }
 }

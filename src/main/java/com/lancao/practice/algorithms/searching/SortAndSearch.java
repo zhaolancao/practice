@@ -30,7 +30,7 @@ public class SortAndSearch {
     }
 
     private static int[] mergeSort(int[] elements, int left, int right) {
-        
+
         if (left >= right) {
             return elements;
         }
@@ -75,5 +75,42 @@ public class SortAndSearch {
             elements[i] = sorted[j++];
         }
         return elements;
+    }
+
+    public static int[] quickSort(int[] elements) {
+        quickSort(elements, 0, elements.length - 1);
+        return elements;
+    }
+
+    private static void quickSort(int[] elements, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        int cursor = start, i = cursor + 1, j = end;
+        int temp = elements[cursor];
+        while (i < j) {
+            while (i <= j && temp >= elements[i]) {
+                elements[cursor] = elements[i];
+                cursor = i;
+                i++;
+            }
+            while (i <= j && temp < elements[j]) {
+                j--;
+            }
+            if (i <= j) {
+                elements[cursor] = elements[j];
+                elements[j] = elements[i];
+                cursor = i;
+                i++;
+            }
+            if (cursor == start) {
+                return;
+            }
+        }
+        if (cursor >= start && cursor <= end) {
+            elements[cursor] = temp;
+        }
+        quickSort(elements, start, cursor);
+        quickSort(elements, cursor + 1, end);
     }
 }
