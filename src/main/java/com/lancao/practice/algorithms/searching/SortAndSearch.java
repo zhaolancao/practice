@@ -113,4 +113,49 @@ public class SortAndSearch {
         quickSort(elements, start, cursor);
         quickSort(elements, cursor + 1, end);
     }
+
+    /**
+     * 无序数组排序后的最大相邻差
+     */
+    public static int maxNeighbourDistance(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        int maxDistance = 0, low = nums[0], high = nums[0], curLow = low, curHigh = high;
+        for (int i = 1; i < nums.length; i++) {
+            int n = nums[i];
+            if (n < low) {
+                int tempDistance = low - n;
+                if (tempDistance > maxDistance) {
+                    maxDistance = tempDistance;
+                    curLow = n;
+                    curHigh = low;
+                }
+                low = n;
+                continue;
+            }
+            if (n > high) {
+                int tempDistance = n - high;
+                if (tempDistance > maxDistance) {
+                    maxDistance = tempDistance;
+                    curLow = high;
+                    curHigh = n;
+                }
+                high = n;
+                continue;
+            }
+            if (curLow < n && n < curHigh) {
+                int tdLeft = n - curLow;
+                int tdRight = curHigh - n;
+                if (tdLeft >= tdRight) {
+                    maxDistance = tdLeft;
+                    curHigh = n;
+                } else {
+                    maxDistance = tdRight;
+                    curLow = n;
+                }
+            }
+        }
+        return maxDistance;
+    }
 }

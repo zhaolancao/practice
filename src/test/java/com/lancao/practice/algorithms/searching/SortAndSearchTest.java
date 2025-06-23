@@ -46,4 +46,13 @@ class SortAndSearchTest {
         System.out.println();
         System.out.println("quickSort cost: " + (currentTimeMillis() - start) + "ms");
     }
+
+    @Test
+    void maxNeighbourDistance() {
+        long start = currentTimeMillis();
+        Assertions.assertEquals(2, SortAndSearch.maxNeighbourDistance(new int[]{9, 2, 0, 2, 5, 0, 6, 1, 3, 7}));
+        Assertions.assertEquals(6, SortAndSearch.maxNeighbourDistance(new int[]{12, 16, 13, 14, 20, 19, 6}));
+        Assertions.assertEquals(10, SortAndSearch.maxNeighbourDistance(new int[]{12, 16, 13, 14, 20, 19, 6, 30}));
+        System.out.println("maxNeighbourDistance cost: " + (currentTimeMillis() - start) + "ms");
+    }
 }
