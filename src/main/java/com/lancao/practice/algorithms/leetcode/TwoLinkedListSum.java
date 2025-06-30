@@ -84,4 +84,50 @@ public class TwoLinkedListSum {
         }
         return result;
     }
+
+    /**
+     * 86. 分隔链表
+     * </p>
+     * 给你一个链表的头节点 head 和一个特定值 x ，请你对链表进行分隔，使得所有 小于 x 的节点都出现在 大于或等于 x 的节点之前。
+     * 你应当 保留 两个分区中每个节点的初始相对位置。
+     */
+    public static ListNode partition(ListNode head, int x) {
+        // [1,4,3,2,5,2]:3
+        ListNode cursor = head;
+        ListNode preNoLess = null;
+        while (cursor != null && cursor.val < x) {
+            preNoLess = cursor;
+            cursor = cursor.next;
+        }
+        if (preNoLess == null) {
+            while (cursor != null && cursor.val >= x) {
+                preNoLess = cursor;
+                cursor = cursor.next;
+            }
+            if (cursor == null) {
+                return head;
+            }
+            preNoLess.next = cursor.next;
+            cursor.next = head;
+            head = cursor;
+            cursor = cursor.next;
+            preNoLess = head;
+        }
+        while (cursor != null) {
+            ListNode firstNoLess = preNoLess.next;
+            ListNode preLess = cursor;
+            while (cursor != null && cursor.val >= x) {
+                preLess = cursor;
+                cursor = cursor.next;
+            }
+            while (cursor != null && cursor.val < x) {
+                preNoLess.next = cursor;
+                preNoLess = preNoLess.next;
+                preLess.next = cursor.next;
+                cursor = cursor.next;
+            }
+            preNoLess.next = firstNoLess;
+        }
+        return head;
+    }
 }

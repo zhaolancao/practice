@@ -10,7 +10,11 @@ class TwoLinkedListSumTest {
         print(TwoLinkedListSum.addTwoNumbers(buildListNode(new int[]{2, 0, 2, 5}), buildListNode(new int[]{6, 2, 8})));
         print(TwoLinkedListSum.addTwoNumbers(buildListNode(new int[]{2, 0, 2, 5}), buildListNode(new int[]{0})));
         print(TwoLinkedListSum.addTwoNumbers(buildListNode(new int[]{0}), buildListNode(new int[]{6, 2, 8})));
+    }
 
+    @Test
+    void partition() {
+        print(TwoLinkedListSum.partition(buildListNode(new int[]{4, 3, 2, 5, 2}), 3));
     }
 
     private static ListNode buildListNode(int[] elements) {
