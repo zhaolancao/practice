@@ -35,59 +35,64 @@ public class NSum {
      */
     public static List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
-        Map<Integer, Integer> indexMap = new HashMap<>();
-        int[] countArray = new int[nums.length];
-        int maxIndex = 0;
-        int zeroIndex = -1;
-        for (int i = 0; i < nums.length; i++) {
-            int n = nums[i];
-            Integer index = indexMap.get(n);
-            if (index == null) {
-                index = maxIndex;
-                indexMap.put(n, index);
-                nums[maxIndex++] = n;
-            }
-            countArray[index] = countArray[index] + 1;
-            if (n == 0) {
-                zeroIndex = index;
-            }
-        }
-        for (int i = 0; i < maxIndex; i++) {
-            for (int j = i + 1; j < maxIndex; j++) {
-                int remaining = -nums[i] - nums[j];
-                Integer countIndex = indexMap.get(remaining);
-                if (countIndex == null) {
-                    continue;
-                }
-                if (remaining < nums[i] && remaining < nums[j]) {
-                    if (nums[i] > nums[j]) {
-                        result.add(buildThreeList(remaining, nums[j], nums[i]));
-                    } else {
-                        result.add(buildThreeList(remaining, nums[i], nums[j]));
-                    }
-                } else if (countArray[countIndex] > 1) {
-                    if (remaining == nums[i] || remaining == nums[j]) {
-                        if (nums[i] > nums[j]) {
-                            result.add(buildThreeList(nums[j], remaining, nums[i]));
-                        } else {
-                            result.add(buildThreeList(remaining, nums[i], nums[j]));
-                        }
-                    }
-                }
-            }
-        }
-        if (zeroIndex != -1 && countArray[zeroIndex] >= 3) {
-            result.add(buildThreeList(0, 0, 0));
-        }
-        return result;
-    }
 
-    private static List<Integer> buildThreeList(int min, int middle, int max) {
-        List<Integer> valid = new ArrayList<>();
-        valid.add(min);
-        valid.add(middle);
-        valid.add(max);
-        return valid;
+        // 如果数组为空或长度小于3，直接返回空列表
+        if (nums == null || nums.length < 3) {
+            return result;
+        }
+
+        // 对数组进行排序，便于使用双指针法和去重
+        Arrays.sort(nums);
+
+        // 遍历数组，固定第一个数，然后使用双指针寻找另外两个数
+        int n = nums.length;
+        for (int i = 0; i < n - 2; i++) {
+            // 如果当前数大于0，由于数组已排序，后面的数也都大于0，三数之和必然大于0，所以结束循环
+            if (nums[i] > 0) {
+                break;
+            }
+
+            // 跳过重复的第一个数
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            // 双指针，分别指向当前元素之后的第一个元素和最后一个元素
+            int left = i + 1;
+            int right = n - 1;
+
+            while (left < right) {
+                // 计算当前三数之和
+                int sum = nums[i] + nums[left] + nums[right];
+
+                if (sum == 0) {
+                    // 找到一个符合条件的三元组，添加到结果列表
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+
+                    // 跳过重复的左指针
+                    while (left < right && nums[left] == nums[left + 1]) {
+                        left++;
+                    }
+
+                    // 跳过重复的右指针
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+
+                    // 移动左右指针
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    // 如果和小于0，说明左指针的值太小，左指针右移
+                    left++;
+                } else {
+                    // 如果和大于0，说明右指针的值太大，右指针左移
+                    right--;
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -262,25 +267,62 @@ public class NSum {
         return sum > mode ? sum % mode : sum;
     }
 
-    private static int getFloor(int num, Map<Integer, Integer> numMap, Map<String, Integer> floorMap) {
-        int f = 0;
-        for (Map.Entry<Integer, Integer> entry : numMap.entrySet()) {
-            int preNum = entry.getKey();
-            int count = entry.getValue();
-            String keyIJ = preNum + "_" + num;
-            String keyJI = num + "_" + preNum;
-            if (floorMap.get(keyIJ) != null) {
-                f = floorMap.get(keyIJ) * count;
-            } else if (floorMap.get(keyJI) != null) {
-                f = floorMap.get(keyJI) * count;
-            } else {
-                int floor = preNum > num ? preNum / num : num / preNum;
-                floorMap.put(keyIJ, floor);
-                f = floor * count;
+    /**
+     * 16. 最接近的三数之和
+     * 给你一个长度为 n 的整数数组 nums 和一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
+     * 返回这三个数的和。
+     * 假定每组输入只存在恰好一个解。
+     */
+    public static int threeSumClosest(int[] nums, int target) {
+        // 如果数组长度小于等于3，直接返回所有元素的和
+        if (nums.length <= 3) {
+            int sum = 0;
+            for (int num : nums) {
+                sum += num;
+            }
+            return sum;
+        }
+
+        // 对数组进行排序，便于使用双指针法
+        Arrays.sort(nums);
+
+        // 初始化最接近的和为前三个元素的和
+        int closestSum = nums[0] + nums[1] + nums[2];
+        // 遍历数组，固定第一个数，然后使用双指针寻找另外两个数
+        for (int i = 0; i < nums.length - 2; i++) {
+            // 避免重复计算
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            // 双指针，分别指向当前元素之后的第一个元素和最后一个元素
+            int left = i + 1;
+            int right = nums.length - 1;
+
+            while (left < right) {
+                // 计算当前三数之和
+                int sum = nums[i] + nums[left] + nums[right];
+
+                // 如果当前和等于目标值，直接返回
+                if (sum == target) {
+                    return sum;
+                }
+
+                // 更新最接近的和
+                if (Math.abs(sum - target) < Math.abs(closestSum - target)) {
+                    closestSum = sum;
+                }
+
+                // 根据当前和与目标值的大小关系，移动指针
+                if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
             }
         }
 
-        return f;
+        return closestSum;
     }
 }
 

@@ -489,4 +489,298 @@ public class LeetCode {
             return bobPoints;
         }
     }
+
+    /**
+     * 14. 最长公共前缀
+     */
+    public static String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0) {
+            return "";
+        }
+        if (strs.length == 1) {
+            return strs[0];
+        }
+        StringBuilder commonPrefix = new StringBuilder();
+        int length = strs[0].length();
+        for (int i = 0; i < length; i++) {
+            char ch = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (i >= strs[j].length() || strs[j].charAt(i) != ch) {
+                    return commonPrefix.toString();
+                }
+            }
+            commonPrefix.append(ch);
+        }
+        return commonPrefix.toString();
+    }
+
+    /**
+     * 151. 反转字符串中的单词
+     */
+    public static String reverseWords(String s) {
+        StringBuilder reversed = new StringBuilder();
+        s = s.trim();
+        String space = " ";
+        String[] strs = s.split(space);
+        for (int i = strs.length - 1; i >= 0; i--) {
+            if (!strs[i].isBlank()) {
+                reversed.append(strs[i]).append(space);
+            }
+        }
+        if (!reversed.isEmpty()) {
+            reversed.deleteCharAt(reversed.length() - 1);
+        }
+        return reversed.toString();
+    }
+
+    /**
+     * 2047. 句子中的有效单词数
+     * 句子仅由小写字母（'a' 到 'z'）、数字（'0' 到 '9'）、连字符（'-'）、标点符号（'!'、'.' 和 ','）以及空格（' '）组成。每个句子可以根据空格分解成 一个或者多个 token ，这些 token 之间由一个或者多个空格 ' ' 分隔。
+     * <p>
+     * 给你一个字符串 sentence ，请你找出并返回 sentence 中 有效单词的数目 。
+     */
+    public static int countValidWords(String sentence) {
+        String[] tokens = sentence.split(" ");
+        int count = 0;
+        for (String token : tokens) {
+            if (isValidWord(token)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 如果一个 token 同时满足下述条件，则认为这个 token 是一个有效单词：
+     * <p>
+     * 仅由小写字母、连字符和/或标点（不含数字）组成。
+     * 至多一个 连字符 '-' 。如果存在，连字符两侧应当都存在小写字母（"a-b" 是一个有效单词，但 "-ab" 和 "ab-" 不是有效单词）。
+     * 至多一个 标点符号。如果存在，标点符号应当位于 token 的 末尾 。
+     * 这里给出几个有效单词的例子："a-b."、"afad"、"ba-c"、"a!" 和 "!" 。
+     */
+    private static boolean isValidWord(String token) {
+        if (token.isBlank()) {
+            return false;
+        }
+        char hyphen = '-';
+        int hyphenCount = 0;
+        Set<Character> punctuations = new HashSet<>() {{
+            add('!');
+            add('.');
+            add(',');
+        }};
+        int punctuationCount = 0;
+        boolean prevIsLetter = false;
+        for (int i = 0; i < token.length(); i++) {
+            char ch = token.charAt(i);
+            // 至多一个 连字符 '-' 。如果存在，连字符两侧应当都存在小写字母（"a-b" 是一个有效单词，但 "-ab" 和 "ab-" 不是有效单词）。
+            if (ch == hyphen) {
+                if (hyphenCount > 0 || !prevIsLetter) {
+                    return false;
+                }
+                if (i == token.length() - 1 || !isLowerCaseLetter(token.charAt(i + 1))) {
+                    return false;
+                }
+                hyphenCount++;
+            } else if (punctuations.contains(ch)) {
+                if (punctuationCount > 0 || i != token.length() - 1) {
+                    return false;
+                }
+                punctuationCount++;
+            } else {
+                boolean isLetter = isLowerCaseLetter(ch);
+                if (!isLetter && ch != '/') {
+                    return false;
+                }
+                prevIsLetter = isLetter;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isLowerCaseLetter(char ch) {
+        return ch >= 'a' && ch <= 'z';
+    }
+
+    /**
+     * 581. 最短无序连续子数组
+     * 给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+     * <p>
+     * 请你找出符合题意的 最短 子数组，并输出它的长度。
+     */
+    public static int findUnsortedSubarray(int[] nums) {
+        int[] copy = Arrays.copyOf(nums, nums.length);
+        Arrays.sort(copy);
+        int left = 0;
+        while (left < nums.length && nums[left] == copy[left]) {
+            left++;
+        }
+        int right = nums.length - 1;
+        while (right >= left && nums[right] == copy[right]) {
+            right--;
+        }
+        return right - left + 1;
+    }
+
+    /**
+     * 1071. 字符串的最大公因子
+     */
+    public String gcdOfStrings(String str1, String str2) {
+        if (str1.equals(str2)) {
+            return str1;
+        }
+        int l1 = str1.length();
+        int l2 = str2.length();
+        if (l1 > l2) {
+            String str = str1;
+            str1 = str2;
+            str2 = str;
+        }
+        for (int i = l1; i >= 1; ) {
+            if (l1 % i != 0 || l2 % i != 0) {
+                continue;
+            }
+            String subStr = str1.substring(0, i);
+            if (isGcdStr(str1, str2, subStr)) {
+                return subStr;
+            }
+            i--;
+        }
+        return "";
+    }
+
+    private static boolean isGcdStr(String str1, String str2, String subStr) {
+        return Arrays.stream(str1.split(subStr)).allMatch(String::isEmpty)
+                && Arrays.stream(str2.split(subStr)).allMatch(String::isEmpty);
+    }
+
+    /**
+     * 899. 有序队列
+     */
+    public static String orderlyQueue(String s, int k) {
+        if (k == 1) {
+            String smallest = s;
+            // 尝试所有可能的循环移位
+            for (int i = 0; i < s.length(); i++) {
+                // 将字符串向左循环移位i个位置
+                String rotated = s.substring(i) + s.substring(0, i);
+                // 比较并更新最小字符串
+                if (rotated.compareTo(smallest) < 0) {
+                    smallest = rotated;
+                }
+            }
+            return smallest;
+        }
+        // 当 k >= 2 时，可以得到任意排列，返回排序后的字符串
+        else {
+            char[] chars = s.toCharArray();
+            Arrays.sort(chars);
+            return new String(chars);
+        }
+    }
+
+    /**
+     * 1111. 有效括号的嵌套深度
+     * 示例 1：
+     * <p>
+     * 输入：seq = "(()())"
+     * 输出：[0,1,1,1,1,0]
+     * 示例 2：
+     * <p>
+     * 输入：seq = "()(())()"
+     * 输出：[0,0,0,1,1,0,1,1]
+     * 解释：本示例答案不唯一。
+     * 按此输出 A = "()()", B = "()()", max(depth(A), depth(B)) = 1，它们的深度最小。
+     * 像 [1,1,1,0,0,1,1,1]，也是正确结果，其中 A = "()()()", B = "()", max(depth(A), depth(B)) = 1 。
+     */
+    public static int[] maxDepthAfterSplit(String seq) {
+        int[] result = new int[seq.length()];
+        int depth = 0;
+        for (int i = 0; i < seq.length(); i++) {
+            char ch = seq.charAt(i);
+            if (ch == '(') {
+                result[i] = depth % 2 == 0 ? 0 : 1;
+                depth++;
+            } else if (ch == ')') {
+                depth--;
+                result[i] = depth % 2 == 0 ? 0 : 1;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 946. 验证栈序列
+     */
+    public static boolean validateStackSequences(int[] pushed, int[] popped) {
+        if (pushed.length < popped.length) {
+            return false;
+        }
+        Stack<Integer> stack = new Stack<>();
+        int ii = 0;
+        int io = 0;
+        while (ii < pushed.length && io < popped.length) {
+            if (pushed[ii] == popped[io]) {
+                ii++;
+                io++;
+            } else if (!stack.isEmpty() && stack.peek() == popped[io]) {
+                stack.pop();
+                io++;
+            } else {
+                stack.push(pushed[ii]);
+                ii++;
+            }
+        }
+        while (io < popped.length) {
+            if (stack.isEmpty() || stack.pop() != popped[io++]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 554. 砖墙
+     */
+    public static int leastBricks(List<List<Integer>> wall) {
+        List<List<Integer>> preSumList = new ArrayList<>();
+        HashMap<Integer, Integer> preSumMap = new HashMap<>();
+        for (List<Integer> bricks : wall) {
+            List<Integer> preSum = new ArrayList<>();
+            preSumMap.put(bricks.get(0), preSumMap.getOrDefault(bricks.get(0), 0) + 1);
+            preSum.add(bricks.get(0));
+            for (int j = 1; j < bricks.size(); j++) {
+                int current = bricks.get(j) + preSum.get(j - 1);
+                preSum.add(current);
+                preSumMap.put(current, preSumMap.getOrDefault(current, 0) + 1);
+            }
+            preSumList.add(preSum);
+        }
+        int total = preSumList.get(0).get(preSumList.get(0).size() - 1);
+        preSumMap.remove(total);
+        if (preSumMap.isEmpty()) {
+            return wall.size();
+        }
+        Integer[] preSumCountArray = preSumMap.values().toArray(new Integer[0]);
+        Arrays.sort(preSumCountArray, (o1, o2) -> o2 - o1);
+        return wall.size() - preSumCountArray[0];
+    }
+
+    /**
+     * 11. 盛最多水的容器
+     */
+    public int maxArea(int[] height) {
+        int max = 0;
+        int left = 0, right = height.length - 1;
+        while (left < right) {
+            int area = (right - left) * Math.min(height[left], height[right]);
+            max = Math.max(max, area);
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return max;
+    }
 }

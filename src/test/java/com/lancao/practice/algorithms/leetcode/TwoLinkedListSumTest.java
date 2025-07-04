@@ -17,6 +17,11 @@ class TwoLinkedListSumTest {
         print(TwoLinkedListSum.partition(buildListNode(new int[]{4, 3, 2, 5, 2}), 3));
     }
 
+    @Test
+    void rotateRight() {
+        print(TwoLinkedListSum.rotateRight(buildListNode(new int[]{1,2}), 2));
+    }
+
     private static ListNode buildListNode(int[] elements) {
         if (elements.length == 0) {
             return null;

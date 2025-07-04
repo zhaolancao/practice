@@ -130,4 +130,36 @@ public class TwoLinkedListSum {
         }
         return head;
     }
+
+    /**
+     * 61. 旋转链表
+     */
+    public static ListNode rotateRight(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+        int length = 0;
+        ListNode tail = head;
+        while (tail.next != null) {
+            length++;
+            tail = tail.next;
+        }
+        length++;
+        if (k >= length) {
+            k = k % length;
+        }
+        if (k == 0) {
+            return head;
+        }
+        length -= k;
+        int i = 1;
+        ListNode newTail = head;
+        while (i++ < length) {
+            newTail = newTail.next;
+        }
+        tail.next = head;
+        head = newTail.next;
+        newTail.next = null;
+        return head;
+    }
 }
