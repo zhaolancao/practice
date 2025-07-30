@@ -18,7 +18,15 @@ repositories {
 }
 
 dependencies {
+	// https://mvnrepository.com/artifact/org.springframework/spring-web
+	implementation("org.springframework:spring-web")
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// https://mvnrepository.com/artifact/org.springframework/spring-tx
+	implementation("org.springframework:spring-tx:6.2.9")
+	// https://mvnrepository.com/artifact/org.apache.ignite/ignite-spring
+	implementation("org.apache.ignite:ignite-spring:2.17.0")// 使用支持 Java 9+ 的 Ignite 版本
+	implementation("org.apache.ignite:ignite-core:2.17.0")
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
