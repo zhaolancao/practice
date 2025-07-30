@@ -783,4 +783,315 @@ public class LeetCode {
         }
         return max;
     }
+
+    /**
+     * 1394. 找出数组中的幸运数
+     */
+    public static int findLucky(int[] arr) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int num : arr) {
+            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        }
+        int max = 0;
+        for (int key : countMap.keySet()) {
+            if (key == countMap.get(key)) {
+                max = Math.max(max, key);
+            }
+        }
+        return max;
+    }
+
+    /**
+     * 5. 最长回文子串
+     */
+    public static String longestPalindrome(String s) {
+        String result = "";
+        int maxLength = 0;
+        for (int i = 0; i < s.length(); i++) {
+            String odd = getPalindrome(s, i, i);
+            String even = getPalindrome(s, i, i + 1);
+            if (odd.length() > even.length() && odd.length() > maxLength) {
+                maxLength = odd.length();
+                result = odd;
+            } else if (even.length() > maxLength) {
+                maxLength = even.length();
+                result = even;
+            }
+        }
+
+        return result;
+    }
+
+    private static String getPalindrome(String s, int left, int right) {
+        int length = 0;
+        if (left == right) {
+            length = 1;
+            left--;
+            right++;
+        }
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+            length += 2;
+        }
+        return length == 0 ? "" : length == 1 ? s.substring(left + 1, left + 2) : s.substring(left + 1, right);
+    }
+
+    /**
+     * 54. 螺旋矩阵
+     */
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        boolean[][] visited = new boolean[matrix.length][matrix[0].length];
+        int i = 0, j = 0;
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        while (result.size() < rows * cols) {
+            // move right
+            while (j < cols && !visited[i][j]) {
+                visited[i][j] = true;
+                result.add(matrix[i][j++]);
+            }
+            if (j == cols || visited[i][j]) {
+                j--;
+            }
+            i++;
+            // move down
+            while (i < rows && !visited[i][j]) {
+                visited[i][j] = true;
+                result.add(matrix[i++][j]);
+            }
+            if (i == rows || visited[i][j]) {
+                i--;
+            }
+            j--;
+            // move left
+            while (j >= 0 && !visited[i][j]) {
+                visited[i][j] = true;
+                result.add(matrix[i][j--]);
+            }
+            if (j == -1 || visited[i][j]) {
+                j++;
+            }
+            i--;
+            // move up
+            while (i >= 0 && !visited[i][j]) {
+                visited[i][j] = true;
+                result.add(matrix[i--][j]);
+            }
+            if (i == -1 || visited[i][j]) {
+                i++;
+            }
+            j++;
+        }
+        return result;
+    }
+
+    /**
+     * 10. 正则表达式匹配
+     * 详细解释
+     * 动态规划解法
+     * 1. 状态定义：
+     * <p>
+     * dp[i][j] 表示字符串 s 的前 i 个字符与模式 p 的前 j 个字符是否匹配。
+     * 2. 初始化：
+     * <p>
+     * dp[0][0] = true：空字符串匹配空模式。
+     * 对于 j > 0，如果 p[j-1] == '*'，则 dp[0][j] = dp[0][j-2]：处理空字符串与形如 a*b*c* 的模式匹配。
+     * 3. 状态转移：
+     * <p>
+     * 如果 p[j-1] 是普通字符或 .：
+     * 如果 s[i-1] 与 p[j-1] 匹配，则 dp[i][j] = dp[i-1][j-1]
+     * 如果 p[j-1] 是 *：
+     * 匹配零次：dp[i][j] = dp[i][j-2]
+     * 匹配一次或多次：如果 p[j-2] 与 s[i-1] 匹配，则 dp[i][j] = dp[i][j] || dp[i-1][j]
+     * 4. 结果：
+     * <p>
+     * dp[m][n] 表示整个字符串 s 是否与模式 p 匹配。
+     * 递归解法（带记忆化）
+     * 1. 基本思路：
+     * <p>
+     * 如果模式为空，则字符串必须也为空才匹配。
+     * 检查第一个字符是否匹配（相等或模式字符为 .）。
+     * 处理 * 的两种情况：匹配零次或匹配多次。
+     * 2. 记忆化：
+     * <p>
+     * 使用二维数组 memo 存储已计算的结果，避免重复计算。
+     * memo[i][j] = 1 表示匹配，memo[i][j] = 0 表示不匹配，memo[i][j] = -1 表示未计算。
+     * 3. 递归终止条件：
+     * <p>
+     * 如果模式到达末尾，检查字符串是否也到达末尾。
+     * 复杂度分析
+     * 动态规划解法
+     * 时间复杂度：O(mn)，其中 m 是字符串 s 的长度，n 是模式 p 的长度。我们需要填充大小为 (m+1)(n+1) 的 dp 表。
+     * 空间复杂度：O(m*n)，用于存储 dp 表。
+     * 递归解法（带记忆化）
+     * 时间复杂度：O(m*n)，每个状态只计算一次。
+     * 空间复杂度：O(m*n)，用于存储记忆化数组，递归调用栈的深度最大为 O(m+n)。
+     * 示例演示
+     * 以 s = "aab", p = "cab" 为例：
+     * <p>
+     * 1. 初始化 dp 数组，设置 dp[0][0] = true
+     * <p>
+     * 2. 处理 s 为空的情况：dp[0][2] = true, dp[0][4] = true
+     * <p>
+     * 3. 填充 dp 数组：
+     * <p>
+     * dp[1][3] = true：'a' 匹配 'c*a'
+     * dp[2][4] = true：'aa' 匹配 'ca'
+     * dp[3][5] = true：'aab' 匹配 'cab'
+     * 4. 最终结果：dp[3][5] = true，表示 "aab" 和 "cab" 匹配。
+     */
+    public static boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+
+        // dp[i][j] 表示 s 的前 i 个字符与 p 的前 j 个字符是否匹配
+        boolean[][] dp = new boolean[m + 1][n + 1];
+
+        // 空字符串和空模式匹配
+        dp[0][0] = true;
+
+        // 处理 s 为空，p 不为空的情况
+        for (int j = 1; j <= n; j++) {
+            // 确保当前字符是 '*' 且 j >= 2
+            if (j >= 2 && p.charAt(j - 1) == '*') {
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+
+        // 填充 dp 数组
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                char sc = s.charAt(i - 1);
+                char pc = p.charAt(j - 1);
+
+                if (pc == '.' || pc == sc) {
+                    // 如果当前字符匹配
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (pc == '*') {
+                    // 确保 j >= 2
+                    if (j >= 2) {
+                        char prevPc = p.charAt(j - 2);
+
+                        // 匹配零次：跳过 * 和它前面的字符
+                        dp[i][j] = dp[i][j - 2];
+
+                        // 匹配一次或多次：如果 * 前面的字符可以匹配 s 的当前字符
+                        if (prevPc == '.' || prevPc == sc) {
+                            dp[i][j] = dp[i][j] || dp[i - 1][j];
+                        }
+                    }
+                    // 如果 j < 2，则 dp[i][j] 保持为 false
+                }
+                // 其他情况默认为 false
+            }
+        }
+        ThreadLocal<String> a = new ThreadLocal<>();
+        a.set("1");
+        a.remove();
+//        a.set(null);
+        return dp[m][n];
+    }
+
+    /**
+     * 3487. 删除后的最大子数组元素和
+     */
+    public static int maxSum(int[] nums) {
+        int sum = 0;
+        int max = Integer.MIN_VALUE;
+        Set<Integer> dataSet = new HashSet<>();
+        for (int num : nums) {
+            if (!dataSet.contains(num)) {
+                dataSet.add(num);
+                if (num > 0) {
+                    sum += num;
+                }
+                if (num > max) {
+                    max = num;
+                }
+            }
+        }
+        return max < 0 ? max : sum;
+    }
+
+    /**
+     * 1717. 删除子字符串的最大得分
+     */
+    public int maximumGain(String s, int x, int y) {
+        // To simplify the logic, we can ensure 'x' is always the higher score.
+        // If 'y' is higher, we just swap the logic by passing the pairs in a different order.
+        if (x < y) {
+            // If "ba" is worth more, prioritize it.
+            return calculateGain(s, y, x, 'b', 'a');
+        } else {
+            // Otherwise, prioritize "ab".
+            return calculateGain(s, x, y, 'a', 'b');
+        }
+    }
+
+    /**
+     * Helper function to calculate the gain by prioritizing one pair over the other.
+     *
+     * @param s             The input string.
+     * @param highScore     The score for the high-priority pair.
+     * @param lowScore      The score for the low-priority pair.
+     * @param highPrioChar1 The first character of the high-priority pair.
+     * @param highPrioChar2 The second character of the high-priority pair.
+     * @return The total maximum gain.
+     */
+    private int calculateGain(String s, int highScore, int lowScore, char highPrioChar1, char highPrioChar2) {
+        long totalGain = 0;
+        StringBuilder remainingAfterFirstPass = new StringBuilder();
+
+        // 1. First Pass: Greedily remove the high-priority pair.
+        // We use the StringBuilder as a stack.
+        for (char ch : s.toCharArray()) {
+            // If the current character forms a high-priority pair with the last character on our "stack"...
+            if (ch == highPrioChar2 && remainingAfterFirstPass.length() > 0 &&
+                    remainingAfterFirstPass.charAt(remainingAfterFirstPass.length() - 1) == highPrioChar1) {
+
+                // ...then we found a pair. "Pop" the last character and add the score.
+                remainingAfterFirstPass.deleteCharAt(remainingAfterFirstPass.length() - 1);
+                totalGain += highScore;
+            } else {
+                // Otherwise, "push" the current character onto the stack.
+                remainingAfterFirstPass.append(ch);
+            }
+        }
+
+        // The low-priority pair is the reverse of the high-priority one.
+        char lowPrioChar1 = highPrioChar2;
+        char lowPrioChar2 = highPrioChar1;
+        StringBuilder finalString = new StringBuilder();
+
+        // 2. Second Pass: Remove the low-priority pair from the remaining characters.
+        for (char ch : remainingAfterFirstPass.toString().toCharArray()) {
+            if (ch == lowPrioChar2 && finalString.length() > 0 &&
+                    finalString.charAt(finalString.length() - 1) == lowPrioChar1) {
+
+                finalString.deleteCharAt(finalString.length() - 1);
+                totalGain += lowScore;
+            } else {
+                finalString.append(ch);
+            }
+        }
+
+        return (int) totalGain;
+    }
+
+    /**
+     * 1957. 删除字符使字符串变好
+     */
+    public String makeFancyString(String s) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < s.length() - 1; i++) {
+            char ch = s.charAt(i);
+            int end = result.length() - 1;
+            if (end < 2 || result.charAt(end) != ch || result.charAt(end - 1) != ch) {
+                result.append(ch);
+            }
+        }
+        return result.toString();
+    }
 }

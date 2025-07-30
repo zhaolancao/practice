@@ -130,14 +130,55 @@ class LeetCodeTest {
     void leastBricks() {
         //wall =
         //[[1,2,2,1],[3,1,2],[1,3,2],[2,4],[3,1,2],[1,3,1,1]]
-        List<List<Integer>> wall = new ArrayList<>(){{
-        add(new ArrayList<>(){{add(1);add(2);add(2);add(1);}});
-        add(new ArrayList<>(){{add(3);add(1);add(2);}});
-        add(new ArrayList<>(){{add(1);add(3);add(2);}});
-        add(new ArrayList<>(){{add(2);add(4);}});
-        add(new ArrayList<>(){{add(3);add(1);add(2);}});
-        add(new ArrayList<>(){{add(1);add(3);add(1);add(1);}});
+        List<List<Integer>> wall = new ArrayList<>() {{
+            add(new ArrayList<>() {{
+                add(1);
+                add(2);
+                add(2);
+                add(1);
+            }});
+            add(new ArrayList<>() {{
+                add(3);
+                add(1);
+                add(2);
+            }});
+            add(new ArrayList<>() {{
+                add(1);
+                add(3);
+                add(2);
+            }});
+            add(new ArrayList<>() {{
+                add(2);
+                add(4);
+            }});
+            add(new ArrayList<>() {{
+                add(3);
+                add(1);
+                add(2);
+            }});
+            add(new ArrayList<>() {{
+                add(1);
+                add(3);
+                add(1);
+                add(1);
+            }});
         }};
         System.out.println(LeetCode.leastBricks(wall));
+    }
+
+    @Test
+    void longestPalindrome() {
+        System.out.println(LeetCode.longestPalindrome("babad"));
+    }
+
+    @Test
+    void spiralOrder() {
+        // 输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+        System.out.println(LeetCode.spiralOrder(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}));
+    }
+
+    @Test
+    void isMatch() {
+        System.out.println(LeetCode.isMatch("aaa", "a*a"));
     }
 }
